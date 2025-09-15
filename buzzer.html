@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Buzzer Overlay</title>
+<style>
+  body {
+    margin: 0;
+    background: transparent;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+
+  .buzzer {
+    width: 150px;
+    height: 100px;
+    border-radius: 20px; /* abgerundete Ecken */
+    background: grey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+  }
+
+  .active {
+    /* visuelle Aktivierung wird durch Farbe gesteuert */
+  }
+
+  /* Farben der Spieler */
+  #player1.active { background: #3c0000; }
+  #player2.active { background: #65232c; }
+  #player3.active { background: #3c0000; }
+  #player4.active { background: #65232c; color: black; }
+</style>
+</head>
+<body>
+  <div id="player1" class="buzzer">1</div>
+  <div id="player2" class="buzzer">2</div>
+  <div id="player3" class="buzzer">3</div>
+  <div id="player4" class="buzzer">4</div>
+
+  <!-- Buzzer-Sound -->
+  <audio id="buzzSound" src="buzzer.mp3"></audio>
+
+<script>
+  const buzzers = document.querySelectorAll('.buzzer');
+  const sound = document.getElementById('buzzSound');
+  let activeBuzzer = null;
+
+  // Funktion zum Aktivieren eines Buzzers
+  function activateBuzzer(buzzer) {
+    if (activeBuzzer) return; // nur ein Buzzer gleichzeitig
+    buzzer.classList.add('active');
+    activeBuzzer = buzzer;
+    sound.currentTime = 0;
+    sound.play();
+  }
+
+  // Reset aller Buzzer
+  function resetBuzzers() {
+    if (activeBuzzer) {
+      activeBuzzer.classList.remove('active');
+      activeBuzzer = null;
+    }
+  }
+
+  // Tastatursteuerung
+  document.addEventListener('keydown', (e) => {
+    if (e.key >= '1' && e.key <= '4') {
+      const buzzer = document.getElementById('player' + e.key);
+      activateBuzzer(buzzer);
+    } else if (e.code === 'Space') {
+      resetBuzzers();
+    }
+  });
+</script>
+</body>
+</html>
